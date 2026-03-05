@@ -1,13 +1,44 @@
-node {
-  stage('cloning maven project')
-  {
-    git 'https://github.com/Sharath-yp25/mavenproject.git'
-  }
-  stage('Building maven project')
-  {
-    sh 'mvn package'
-  }
-  stage('print'){
-    echo "Hi, my name is Sagar kumar"
-}
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven3'
+        jdk 'JDK21'
+    }
+
+    stages {
+
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/Harsath007/mavenproject.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build Successful'
+        }
+        failure {
+            echo 'Build Failed'
+        }
+    }
 }
